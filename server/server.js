@@ -3,6 +3,9 @@ require('dotenv').config({path: path.join(__dirname, '.env') });
 const express = require('express');
 const connectDB = require('./config/db');
 const authRoutes = require('./routes/auth');
+console.log("Current Directory Node is in:", __dirname);
+console.log("Loaded JWT Secret from .env:", process.env.JWT_SECRET);
+const reportRoutes = require('./routes/reportRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -13,6 +16,7 @@ connectDB();
 // Middleware
 app.use(express.json());
 app.use('/api/auth', authRoutes)
+app.use('/api/reports', reportRoutes);
 
 app.get('/', (req, res) => {
   res.json({ message: 'HydroFlood Kogi API is running' });
