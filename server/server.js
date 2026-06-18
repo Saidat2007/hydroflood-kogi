@@ -6,8 +6,10 @@ const authRoutes = require('./routes/auth');
 console.log("Current Directory Node is in:", __dirname);
 console.log("Loaded JWT Secret from .env:", process.env.JWT_SECRET);
 const reportRoutes = require('./routes/reportRoutes');
+const cors = require('cors');
 
 const app = express();
+app.use(cors());
 const PORT = process.env.PORT || 5000;
 
 // Connect to MongoDB

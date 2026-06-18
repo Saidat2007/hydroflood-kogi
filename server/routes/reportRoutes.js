@@ -23,7 +23,7 @@ router.post('/', protect, async (req, res) => {
 });
 
 // Get all reports, populate userId with name and email
-router.get('/', protect, async (req, res) => {
+router.get('/', async (req, res) => {
     try {
         const reports = await Report.find().populate('userId', 'name email');
         res.status(200).json(reports);
