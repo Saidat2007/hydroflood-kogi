@@ -1,5 +1,4 @@
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YTIxODk4OGY4Y2I5YWJkZmVjMGZjNWIiLCJpYXQiOjE3ODEwMjc2NzgsImV4cCI6MTc4MTAzMTI3OH0.YjZMqZHEBgE-YHX2XDdV1YQ-gWJ4JgjnaWMT1tLsIcY 
-### Login Request
+### LogPOST http://localhost:5000/api/auth/login
 POST http://localhost:5000/api/auth/login
 Content-Type: application/json
 
@@ -8,9 +7,11 @@ Content-Type: application/json
     "password":"mypassword123"
 }
 ### Create a new flood Report (Secured)
-POST http://localhost:5000/api/reports
+POST http://localhost:5000/api/reports/
 Content-Type: application/json
-Authorization: Bearer {{token}}
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhMjE4OTg4ZjhjYjlhYmRmZWMwZmM1YiIsImlhdCI6MTc4MTc5NzA4MywiZXhwIjoxNzgxODAwNjgzfQ.8UXGGjiISC2QOZgDO-ejI78Lq4LtyJZIs55c5LWNPzQ
+
+
 {
     "issueType": "blocked drainage",
     "description": "The main drainage layout along the road is completelyclogged with plastic waste causing heavy overflows.",
@@ -20,7 +21,7 @@ Authorization: Bearer {{token}}
 ### Create a new flood Report (Secured)
 POST http://localhost:5000/api/reports
 Content-Type: application/json
-Authorization: Bearer PASTE_YOUR_LONG_JWT_TOKEN_HERE
+Authorization: Bearer [{token}]
 
 {
     "issueType": "flooding",

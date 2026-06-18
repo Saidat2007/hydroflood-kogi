@@ -45,14 +45,18 @@ router.post('/login', async (req, res) => {
         }
 
         const token = jwt.sign(
-            { userId: user._id },
-            "process.env.JWT_SECRET",
+            { id: user._id }, //Savedas id for middleware consistency
+            process.env.JWT_SECRET, // Clean env variables without quotes!
             { expiresIn: '1h' }
         );
 
-        res.status(200).json({ message: 'Login successful', token, userId: user._id });
-    } catch (error) {
-        res.status(500).json({ message: 'Login failed', error: error.message });
-    }
+        return res.status(200).json({
+             message: 'Login successful', 
+             token: token,
+             userId: user._id 
+            });
+        } catch (error) {
+            res.status(500).json({ message: 'Login failed', error: error.message});
+        }
 });
 module.exports = router;

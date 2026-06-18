@@ -13,7 +13,7 @@ router.post('/', protect, async (req, res) => {
             description,
             location,
             image,
-            userId: req.user,
+            userId: req.user?._id || req.user.id || req.user
         });
         const createdReport = await report.save();
         res.status(201).json(createdReport);
@@ -23,7 +23,7 @@ router.post('/', protect, async (req, res) => {
 });
 
 // Get all reports, populate userId with name and email
-router.get('/', async (req, res) => {
+router.get('/', protect, async (req, res) => {
     try {
         const reports = await Report.find().populate('userId', 'name email');
         res.status(200).json(reports);
@@ -33,4 +33,4 @@ router.get('/', async (req, res) => {
     }
 });
 
-module.exports = protect; // This export the function directly
+module.exports = router; // This export the function directly
