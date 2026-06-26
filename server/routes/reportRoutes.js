@@ -49,20 +49,49 @@ router.get('/', async (req, res) => {
     }
 });
 // @route   DELETE /api/reports/:id
-// @desc    Delete a flood report entry
+// @desc    Delete a flood report entry (Protected Admin Route)
 router.delete('/:id', async (req, res) => {
     try {
+        // 1. Extract token from headers
+        const authHeader = req.headers['authorization'];
+        const token = authHeader && authHeader.split(' ')[1];
+
+        // SECURITY CHECK: If there's no token at all, instantly block them!
+        if (!token) {
+            return res.status(401).json({ message: 'Access denied. No authentication token provided.' });
+        }
+
+        // Ensure jwt is imported at the top of your file, or we can use it here
+        const jwt = require('jsonwebtoken');
+        const secret = process.env.JWT_SECRET || 'my_super_secrete_flood_key_123';
+        let decoded;
+
+        try {
+            // VERIFICATION CHECK: If the token is fake or expired, reject them!
+            decoded = jwt.verify(token, secret);
+        } catch (err) {
+            return res.status(403).json({ message: 'Invalid or expired token. Action rejected.' });
+        }
+
+        // 2. Perform the deletion only after passing both checks
         const report = await Report.findByIdAndDelete(req.params.id);
         
         if (!report) {
             return res.status(404).json({ message: 'Report not found' });
         }
 
-        res.json({ message: 'Report deleted successfully' });
+        // 3. Log the verified action beautifully in your terminal
+        console.log(`\n===================================`);
+        console.log(`VERIFIED ACTION: Report deleted.`);
+        console.log(`ADMIN ACCOUNT  : ID ${decoded.id}`);
+        console.log(`===================================\n`);
+
+        res.json({ message: 'Report successfully removed by administrator.' });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: 'Server error' });
+        res.status(500).json({ message: 'Server error during deletion processing.' });
     }
 });
 
+// Make sure this is at the absolute bottom of the file!
 module.exports = router;

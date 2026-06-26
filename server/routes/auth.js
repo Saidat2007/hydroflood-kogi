@@ -2,61 +2,78 @@ const express = require('express');
 const bcrypt = require('bcryptjs');
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
-
 const router = express.Router();
 
-module.exports = router;
+// @route   POST /api/auth/register
+// @desc    Register an admin user
 router.post('/register', async (req, res) => {
     try {
-        const { email, password } = req.body;
+        const { name, email, password } = req.body;
 
         // Check if user already exists
-        const existingUser = await User.findOne({ email });
+        let existingUser = await User.findOne({ email });
         if (existingUser) {
             return res.status(400).json({ message: 'User already exists' });
         }
 
-        // Hash password
-        const hashedPassword = await bcrypt.hash(password, 10);
+        // Hash the password before saving
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
 
-        // Create and save new user
-        const user = new User({ email, password: hashedPassword });
-        await user.save();
+        // Create new user (defaulting role to admin for our system)
+        const newUser = new User({
+            name,
+            email,
+            password: hashedPassword,
+            role: 'admin'
+        });
 
-        res.status(201).json({ message: 'User registered successfully' });
+        await newUser.save();
+
+        res.status(201).json({ message: 'Admin registered successfully' });
     } catch (error) {
-        res.status(500).json({ message: 'Registration failed', error: error.message });
+        console.error(error);
+        res.status(500).json({ message: 'Server error during registration' });
     }
 });
+
+// @route   POST /api/auth/login
+// @desc    Authenticate admin & get token
 router.post('/login', async (req, res) => {
     try {
         const { email, password } = req.body;
 
-        // Find user by email
+        // Check for user
         const user = await User.findOne({ email });
         if (!user) {
-            return res.status(400).json({ message: 'Invalid email or password' });
+            return res.status(400).json({ message: 'Invalid credentials' });
         }
 
-        // Compare passwords
-        const isPasswordValid = await bcrypt.compare(password, user.password);
-        if (!isPasswordValid) {
-            return res.status(400).json({ message: 'Invalid email or password' });
+        // Check password match
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            return res.status(400).json({ message: 'Invalid credentials' });
         }
 
+        // Ensure the JWT secret key exists in your environment config
+        const secret = process.env.JWT_SECRET || 'my_super_secrete_flood_key_123';
+
+        // Sign and issue JWT Token (valid for 24 hours)
         const token = jwt.sign(
-            { id: user._id }, //Savedas id for middleware consistency
-            process.env.JWT_SECRET, // Clean env variables without quotes!
-            { expiresIn: '1h' }
+            { id: user._id, role: user.role },
+            secret,
+            { expiresIn: '24h' }
         );
 
-        return res.status(200).json({
-             message: 'Login successful', 
-             token: token,
-             userId: user._id 
-            });
-        } catch (error) {
-            res.status(500).json({ message: 'Login failed', error: error.message});
-        }
+        res.json({
+            token,
+            user: { id: user._id, name: user.name, email: user.email }
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error during login' });
+    }
 });
+
+// Move module exports to the very bottom!
 module.exports = router;
