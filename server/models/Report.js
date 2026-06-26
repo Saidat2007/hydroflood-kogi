@@ -9,7 +9,7 @@ const reportSchema = new mongoose.Schema(
         },
         issueType: {
             type: String,
-            enum: ['blocked drainage', 'flooding', 'waste dumping'],
+            enum: ['Blocked drainage', 'Flooding', 'Waste dumping', 'Broken pipe', 'Erosion', 'Damaged culvert'],
             required: true,
         },
         description: {
