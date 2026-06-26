@@ -40,12 +40,28 @@ router.post('/', upload.single('image'), async (req, res) => {
 });
 
 // Get all reports, populate userId with name and email
-router.get('/', async (res) => {
+router.get('/', async (req, res) => {
     try {
         const reports = await Report.find().populate('userId', 'name email');
         res.status(200).json(reports);
     } catch (error) {
         res.status(500).json({ message: error.message || 'Server error' });
+    }
+});
+// @route   DELETE /api/reports/:id
+// @desc    Delete a flood report entry
+router.delete('/:id', async (req, res) => {
+    try {
+        const report = await Report.findByIdAndDelete(req.params.id);
+        
+        if (!report) {
+            return res.status(404).json({ message: 'Report not found' });
+        }
+
+        res.json({ message: 'Report deleted successfully' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
     }
 });
 

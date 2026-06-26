@@ -17,6 +17,7 @@ connectDB();
 
 // Middleware
 app.use(express.json());
+app.use('/uploads', express.static('uploads'));
 app.use('/api/auth', authRoutes)
 app.use('/api/reports', reportRoutes);
 
