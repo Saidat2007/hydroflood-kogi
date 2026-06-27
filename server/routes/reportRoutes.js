@@ -39,13 +39,34 @@ router.post('/', upload.single('image'), async (req, res) => {
     }
 });
 
-// Get all reports, populate userId with name and email
+// 1. THE GET ROUTE (For loading the dashboard cards)
+// This MUST send back JSON data from the database!
 router.get('/', async (req, res) => {
     try {
-        const reports = await Report.find().populate('userId', 'name email');
-        res.status(200).json(reports);
-    } catch (error) {
-        res.status(500).json({ message: error.message || 'Server error' });
+        const reports = await Report.find().sort({ createdAt: -1 });
+        res.status(200).json(reports); // 🔥 Make sure this line is exactly res.json()!
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+});
+
+// 2. THE POST ROUTE (For handling the form submission)
+// This is the ONLY place that should send back the <script> alert snippet!
+router.post('/', upload.single('image'), async (req, res) => {
+    try {
+        // ... (your existing report creation logic where it sets up fields) ...
+        
+        const createdReport = await report.save();
+        
+        // 🔥 The alert script snippet belongs ONLY right here at the end of the POST route!
+        res.status(201).send(`
+            <script>
+                alert('Report submitted successfully! 🎉');
+                window.location.href = 'http://127.0.0.1:5500/admin.html';
+            </script>
+        `);
+    } catch (err) {
+        res.status(400).json({ message: err.message });
     }
 });
 // @route   DELETE /api/reports/:id
@@ -92,6 +113,31 @@ router.delete('/:id', async (req, res) => {
         res.status(500).json({ message: 'Server error during deletion processing.' });
     }
 });
+// Route to update a report's status (Admin only)
+router.patch('/:id/status', async (req, res) => {
+    const { status } = req.body;
 
+    // Validate that the incoming status matches our enum exactly
+    const validStatuses = ['Pending', 'Investigating', 'Resolved'];
+    if (!validStatuses.includes(status)) {
+        return res.status(400).json({ message: 'Invalid status value' });
+    }
+
+    try {
+        const updatedReport = await Report.findByIdAndUpdate(
+            req.params.id,
+            { status },
+            { new: true, runValidators: true }
+        );
+
+        if (!updatedReport) {
+            return res.status(404).json({ message: 'Report not found' });
+        }
+
+        res.status(200).json({ message: 'Status updated successfully', report: updatedReport });
+    } catch (error) {
+        res.status(500).json({ message: 'Server error updating status', error: error.message });
+    }
+});
 // Make sure this is at the absolute bottom of the file!
 module.exports = router;

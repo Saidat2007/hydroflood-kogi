@@ -5,11 +5,11 @@ const reportSchema = new mongoose.Schema(
         userId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User',
-            required: true,
+            //required: true
         },
         issueType: {
             type: String,
-            enum: ['Blocked drainage', 'Flooding', 'Waste dumping', 'Broken pipe', 'Erosion', 'Damaged culvert'],
+            enum: ['Flash Flood', 'River Overflow', 'Blocked Drainage', 'Heavy Rainfall'],
             required: true,
         },
         description: {
