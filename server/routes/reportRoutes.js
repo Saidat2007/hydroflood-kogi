@@ -16,26 +16,25 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-// Create a new flood report (public)
 router.post('/', upload.single('image'), async (req, res) => {
     try {
-        const allowedEnums = Report.schema.path('issueType').enumValues;
-        const incomingIssue = req.body.issueType;
-        
-        const finalIssueType = allowedEnums.includes(incomingIssue) ? incomingIssue : allowedEnums[0];
-
-        const report = new Report({
-            title: req.body.title || finalIssueType,
-            issueType: finalIssueType,
+        // Create the report using the data from the form
+        const newReport = new Report({
+            title: req.body.title,
+            issueType: req.body.issueType,
             description: req.body.description,
             location: req.body.location,
             image: req.file ? req.file.path : "",
-            userId: req.user?._id || "000000000000000000000000"
+            userId: req.user ? req.user._id : "000000000000000000000000"
         });
-        const createdReport = await report.save();
-        res.status(201).json(createdReport);
+
+        await newReport.save();
+        
+        // Return clean JSON - This is what the dashboard expects!
+        res.status(201).json({ success: true, message: 'Report submitted successfully!' });
     } catch (err) {
-        res.status(400).json({ message: err.message || 'Server error' });
+        // If there's an error, return JSON instead of crashing
+        res.status(400).json({ success: false, message: err.message });
     }
 });
 
@@ -59,12 +58,8 @@ router.post('/', upload.single('image'), async (req, res) => {
         const createdReport = await report.save();
         
         // 🔥 The alert script snippet belongs ONLY right here at the end of the POST route!
-        res.status(201).send(`
-            <script>
-                alert('Report submitted successfully! 🎉');
-                window.location.href = 'http://127.0.0.1:5500/admin.html';
-            </script>
-        `);
+        res.status(201).json({message: 'Report submitted successfully!', report:createdReport});
+
     } catch (err) {
         res.status(400).json({ message: err.message });
     }
@@ -113,6 +108,33 @@ router.delete('/:id', async (req, res) => {
         res.status(500).json({ message: 'Server error during deletion processing.' });
     }
 });
+
+// PATCH route to update a report's status
+router.patch('/:id/status', async (req, res) => {
+    const { status } = req.body;
+    
+    // Validate that the incoming status is one of our allowed options
+    if (!['Pending', 'Investigating', 'Resolved'].includes(status)) {
+        return res.status(400).json({ message: 'Invalid status type' });
+    }
+
+    try {
+        const updatedReport = await Report.findByIdAndUpdate(
+            req.params.id,
+            { status: status },
+            { returnDocument: 'after' } // Returns the newly updated document
+        );
+        
+        if (!updatedReport) {
+            return res.status(404).json({ message: 'Report not found' });
+        }
+        
+        res.status(200).json(updatedReport);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+});
+
 // Route to update a report's status (Admin only)
 router.patch('/:id/status', async (req, res) => {
     const { status } = req.body;

@@ -111,6 +111,17 @@
                 const errorData = await response.json();
                 alert(`Submission failed: ${errorData.message}`);
             }
+    // Use this inside your fetch logic in index.html
+const response = await fetch('http://localhost:5000/api/reports', {
+    method: 'POST',
+    body: formData
+});
+
+if (response.ok) {
+    alert('Report submitted successfully! 🎉');
+    // Direct link to the admin page using the full path
+    window.location.href = 'http://127.0.0.1:5500/admin.html';
+}        
         } catch (error) {
             console.error('Error submitting:', error);
             alert('Something went wrong connecting to the server.');
