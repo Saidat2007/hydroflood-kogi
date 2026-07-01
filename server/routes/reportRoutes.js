@@ -38,14 +38,13 @@ router.post('/', upload.single('image'), async (req, res) => {
     }
 });
 
-// 1. THE GET ROUTE (For loading the dashboard cards)
-// This MUST send back JSON data from the database!
 router.get('/', async (req, res) => {
     try {
-        const reports = await Report.find().sort({ createdAt: -1 });
-        res.status(200).json(reports); // 🔥 Make sure this line is exactly res.json()!
-    } catch (err) {
-        res.status(500).json({ message: err.message });
+        const reports = await Report.find();
+        res.json(reports);
+    } catch (error) {
+        console.error(error); // This prints the error in your terminal
+        res.status(500).json({ message: "Server error" });
     }
 });
 

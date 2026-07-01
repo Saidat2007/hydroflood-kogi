@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Public Flood Reports</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-6">
+    <div class="max-w-6xl mx-auto">
+        <h1 class="text-3xl font-bold mb-6 text-gray-800">Live Flood Reports</h1>
+        <div class="bg-blue-50 p-6 rounded-lg mb-8 shadow-inner">
+    <h2 class="text-xl font-bold mb-4">Subscribe for Flood Alerts</h2>
+    <form id="subscribeForm" class="flex flex-col md:flex-row gap-4">
+    <input type="text" id="subName" placeholder="Your Name" class="p-2 border rounded" required>
+    <input type="text" id="subPhone" placeholder="Phone Number (e.g. 080...)" class="p-2 border rounded" required>
+    <select id="subLocation" class="p-2 border rounded">
+        <option value="Lokoja">Lokoja</option>
+        <option value="Ganaja">Ganaja</option>
+        <option value="Adankolo">Adankolo</option>
+    </select>
+    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Subscribe</button>
+</form>
+</div>
+        <div id="publicReportsGrid" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            </div>
+    </div>
+
+    <script>
+        async function fetchPublicReports() {
+            try {
+                const response = await fetch('http://localhost:5000/api/reports');
+                const reports = await response.json();
+                const grid = document.getElementById('publicReportsGrid');
+                
+                grid.innerHTML = reports.map(report => `
+                    <div class="bg-white p-4 rounded-lg shadow-md border border-gray-200">
+                        <h3 class="font-bold text-xl">${report.title || 'Untitled Report'}</h3>
+                        <p class="text-gray-600"><strong>Type:</strong> ${report.issueType}</p>
+                        <p class="text-gray-600"><strong>Location:</strong> ${report.location}</p>
+                        <p class="mt-2 font-semibold text-blue-600">Status: ${report.status || 'Pending'}</p>
+                        <img src="http://localhost:5000/${report.image}" class="mt-4 w-full h-48 object-cover rounded" alt="Report Image">
+                    </div>
+                `).join('');
+            } catch (err) {
+                console.error('Error fetching public reports:', err);
+                document.getElementById('publicReportsGrid').innerHTML = '<p class="text-red-500">Unable to load reports.</p>';
+            }
+        }
+        window.onload = fetchPublicReports;
+        document.getElementById('subscribeForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const data = {
+        name: document.getElementById('subName').value,
+        phoneNumber: document.getElementById('subPhone').value,
+        location: document.getElementById('subLocation').value
+    };
+
+    const res = await fetch('http://localhost:5000/api/subscribers/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+    });
+
+    if (res.ok) alert('Subscription successful!');
+    else alert('Error: Could not subscribe.');
+});
+    </script>
+</body>
+</html>
