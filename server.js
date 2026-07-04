@@ -26,6 +26,8 @@ app.use('/api/auth', authRoutes)
 app.use('/api/reports', reportRoutes);
 app.use('/api/subscribers', subscriberRoutes);
 app.use('/api/alerts', require('./server/routes/alertRoutes'));
+// Add this to server.js
+app.use('/uploads', express.static('server/uploads'));
 
 app.get('/', (req, res) => {
   res.json({ message: 'HydroFlood Kogi API is running' });
