@@ -55,7 +55,7 @@
         location: document.getElementById('subLocation').value
     };
 
-    const res = await fetch('http://localhost:5000/api/subscribers/subscribe', {
+    const res = await fetch('https://hydroflood-kogi-1.onrender.com/api/subscribers/subscribe', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
