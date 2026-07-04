@@ -81,7 +81,7 @@ function handleLogout() {
 }
 async function fetchReports() {
     try {
-        const response = await fetch('http://localhost:5000/api/reports');
+        const response = await fetch('https://hydroflood-kogi-1.onrender.com/api/reports');
         if (!response.ok) throw new Error('Failed to fetch');
         const reports = await response.json();
 
@@ -109,7 +109,7 @@ async function fetchReports() {
                     <option value="Investigating" ${report.status === 'Investigating' ? 'selected' : ''}>Investigating</option>
                     <option value="Resolved" ${report.status === 'Resolved' ? 'selected' : ''}>Resolved</option>
                 </select>
-                <img src="http://localhost:5000/${report.image}" class="mt-4 w-full h-48 object-cover">
+                <img src="https://hydroflood-kogi-1.onrender.com/api/reports/${report.image}" class="mt-4 w-full h-48 object-cover">
             `;
             reportsGrid.appendChild(card);
         });
@@ -127,7 +127,7 @@ async function deleteReport(id) {
             // Grab the token from localStorage
             const token = localStorage.getItem('token');
 
-            const response = await fetch(`http://localhost:5000/api/reports/${id}`, {
+            const response = await fetch(`https://hydroflood-kogi-1.onrender.com/api/reports/${id}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
