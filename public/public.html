@@ -26,6 +26,10 @@
     </div>
 
     <script>
+        const API_URL = window.location.hostname === 'localhost' 
+            ? 'http://localhost:5000' 
+             : 'https://hydroflood-kogi-1.onrender.com';
+
         async function fetchPublicReports() {
             try {
                 const response = await fetch('https://hydroflood-kogi-1.onrender.com/api/reports');
