@@ -88,6 +88,7 @@ async function fetchReports() {
         const response = await fetch(`${API_URL}/api/reports`);
         if (!response.ok) throw new Error('Failed to fetch');
         const reports = await response.json();
+        console.log("Full Report Data:, reports);")
 
         // 1. Update the count here, using the correct variable
         const countElement = document.getElementById('reportCount');
