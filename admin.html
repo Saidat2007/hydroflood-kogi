@@ -85,7 +85,7 @@ function handleLogout() {
 }
 async function fetchReports() {
     try {
-        const response = await fetch('api/reports');
+        const response = await fetch(`${API_URL}/api/reports`);
         if (!response.ok) throw new Error('Failed to fetch');
         const reports = await response.json();
 
