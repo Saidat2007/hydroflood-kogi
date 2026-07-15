@@ -113,7 +113,7 @@ async function fetchReports() {
                     <option value="Investigating" ${report.status === 'Investigating' ? 'selected' : ''}>Investigating</option>
                     <option value="Resolved" ${report.status === 'Resolved' ? 'selected' : ''}>Resolved</option>
                 </select>
-                <img src="https://hydroflood-kogi-1.onrender.com/api/reports/${report.image}" class="mt-4 w-full h-48 object-cover">
+                <img src="${API_URL}/uploads/${report.image}" class="mt-4 w-full h-48 object-cover">
             `;
             reportsGrid.appendChild(card);
         });
