@@ -49,21 +49,22 @@ router.get('/', async (req, res) => {
 });
 
 // 2. THE POST ROUTE (For handling the form submission)
-// This is the ONLY place that should send back the <script> alert snippet!
-router.post('/', upload.single('image'), async (req, res) => {
+router.post('/reports', async (req, res) => {
     try {
-        // ... (your existing report creation logic where it sets up fields) ...
-        
-        const createdReport = await report.save();
-        
-        // 🔥 The alert script snippet belongs ONLY right here at the end of the POST route!
-        res.status(201).json({message: 'Report submitted successfully!', report:createdReport});
-
-    } catch (err) {
-        res.status(400).json({ message: err.message });
+        // Attempt database operation
+        const newReport = new Report(req.body);
+        await newReport.save();
+        res.status(201).json({ success: true, message: 'Report submitted successfully!' });
+    } catch (error) {
+        console.error("Database Error:", error.message);
+        // Graceful response so the user's browser doesn't hang or crash
+        res.status(503).json({ 
+            success: false, 
+            message: 'Database is temporarily busy. Please try submitting again in a moment.' 
+        });
     }
 });
-// @route   DELETE /api/reports/:id
+
 // @desc    Delete a flood report entry (Protected Admin Route)
 router.delete('/:id', async (req, res) => {
     try {
