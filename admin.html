@@ -16,7 +16,7 @@
     <form id="alertForm" class="flex flex-col gap-4">
         <div>
             <label class="block text-sm font-medium text-gray-700">Location</label>
-            <input type="text" id="alertLocation" placeholder="e.g., Lokoja" 
+            <input type="text" id="alertLocation" placeholder="e.g., Lokoja"
                    class="w-full mt-1 p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
         </div>
 
@@ -176,7 +176,7 @@ document.getElementById('alertForm').addEventListener('submit', async (e) => {
         message: document.getElementById('alertMessage').value
     };
 
-    const res = await fetch('http://localhost:5000/api/alerts/send', {
+    const res = await fetch('https://hydroflood-kogi-1.onrender.com/api/alerts/send-alert', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)

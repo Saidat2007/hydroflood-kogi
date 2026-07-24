@@ -13,11 +13,7 @@
     <form id="subscribeForm" class="flex flex-col md:flex-row gap-4">
     <input type="text" id="subName" placeholder="Your Name" class="p-2 border rounded" required>
     <input type="text" id="subPhone" placeholder="Phone Number (e.g. 080...)" class="p-2 border rounded" required>
-    <select id="subLocation" class="p-2 border rounded">
-        <option value="Lokoja">Lokoja</option>
-        <option value="Ganaja">Ganaja</option>
-        <option value="Adankolo">Adankolo</option>
-    </select>
+    <input type="text" id="Location" placeholder="Enter location name">
     <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Subscribe</button>
 </form>
 </div>
@@ -56,7 +52,7 @@
     const data = {
         name: document.getElementById('subName').value,
         phoneNumber: document.getElementById('subPhone').value,
-        location: document.getElementById('subLocation').value
+        location: document.getElementById('Location').value
     };
 
     const res = await fetch(`${API_URL}/api/subscribers/subscribe`, {
@@ -65,8 +61,51 @@
         body: JSON.stringify(data)
     });
 
-    if (res.ok) alert('Subscription successful!');
-    else alert('Error: Could not subscribe.');
+    if (!res.ok) throw new Error(' Failed toSubscribe');
+    alert('Subscription successful!');
+
+    try{
+    } catch (error) {
+    console.error('Full Error Details:', error); // This will show the real error
+    alert('Subscription failed: ' + error.message);
+}
+});
+// Function to show/hide the custom text box
+function toggleCustomLocation(select) {
+    const customInput = document.getElementById('customLocationInput');
+    if (select.value === 'Other') {
+        customInput.classList.remove('hidden');
+        customInput.focus();
+    } else {
+        customInput.classList.add('hidden');
+        customInput.value = ''; // Clear value if switched away
+    }
+}
+
+// Update your button click listener
+document.getElementById('sendAlertBtn').addEventListener('click', async () => {
+    let location = document.getElementById('alertLocation').value;
+    const customLocation = document.getElementById('customLocationInput').value;
+    
+    // If 'Other' is selected, use what was typed in the custom text box
+    if (location === 'Other') {
+        if (!customLocation.trim()) {
+            alert('Please type a custom location.');
+            return;
+        }
+        location = customLocation.trim();
+    }
+
+    const message = document.getElementById('alertMessage').value;
+
+    const response = await fetch(`https://hydroflood-kogi-1.onrender.com/api/subscribers/send-alert`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ location, message })
+    });
+
+    const data = await response.json();
+    alert(data.message);
 });
     </script>
 </body>

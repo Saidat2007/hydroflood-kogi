@@ -19,14 +19,19 @@
                 <label for="location" class="block text-sm font-medium text-gray-700 mb-2">
                     Location
                 </label>
-                <input
-                    type="text"
-                    id="location"
-                    name="location"
-                    placeholder="Enter affected location"
-                    required
-                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
-                />
+                <label for="location">Location:</label>
+                <select id="location" name="location" required>
+                    <option value="">--Select your location--</option>
+                    <option value="Lokoja">Lokoja</option>
+                    <option value="Ganaja">Ganaja</option>
+                    <option value="Adankolo">Adankolo</option>
+                    <option value="Kabba">Kabba</option>
+                    <option value="Anyigba">Anyigba</option>
+                    <option value="Okene">Okene</option>
+                    <option value="Idah">Idah</option>
+                    <option value="Ankpa">Ankpa</option>
+                    <option value="Other">Other</option>
+                </select>
                 </div>
 
                 <div>
@@ -79,31 +84,32 @@
     </div>
 
         <script>
-            const form = document.getElementById('reportForm');
+            document.getElementById('reportForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    // Grab your form fields accurately based on your HTML elements
+    const location = document.getElementById('location').value;
+    // Add other fields if you have description/message inputs too
+    
+    try {
+        const reportResponse = await fetch('https://hydroflood-kogi-1.onrender.com/api/reports', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ location })
+        });
 
-            form.addEventListener('submit', async (e) => {
-                e.preventDefault();
-
-                const formData = new FormData(e.target);
-
-                try {
-                    const response = await fetch('http://localhost:5000/api/reports/', {
-                        method: 'POST',
-                        body: formData
-                    });
-
-                    if (response.ok) {
-                        alert('Report submitted successfully!');
-                        form.reset();
-                    } else {
-                        const errorData = await response.json();
-                        alert('Server Error: ' + (errorData.message || JSON.stringify(errorData)));
-                    }
-                } catch (error) {
-                    console.error('Network Error:', error);
-                    alert('Network Error. Failed to reach the server.');
-                }
-            });
+        const data = await reprtRponse.json();
+        
+        if (reportResponse.ok) {
+            alert(data.message || 'Report submitted successfully!');
+        } else {
+            alert(data.message || 'Something went wrong. Please try again.');
+        }
+    } catch (error) {
+        console.error('Network or Server Error:', error);
+        alert('Unable to connect to the server right now. Please check your connection.');
+    }
+});
         </script>
 </body>
 </html>
