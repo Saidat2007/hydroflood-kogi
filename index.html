@@ -96,25 +96,34 @@
             document.getElementById('reportForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     
-    // Grab your form fields accurately based on your HTML elements
-    const location = document.getElementById('location').value;
-    // Add other fields if you have description/message inputs too
+    // Get the dropdown value and check if it's 'Other'
+        const locationSelect = document.getElementById('location').value;
+        let finalLocation = locationSelect;
+
+        if (locationSelect === 'Other') {
+            finalLocation = document.getElementById('customLocation').value;
+        }
     
     try {
         const reportResponse = await fetch('https://hydroflood-kogi-1.onrender.com/api/reports', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ location })
+            body: JSON.stringify({ 
+    location: finalLocation, 
+    issueType: document.getElementById('issueType').value, 
+    description: document.getElementById('description').value 
+})
         });
-
-        const data = await reprtRponse.json();
+        const data = await reportResponse.json();
         
-        if (reportResponse.ok) {
-            alert(data.message || 'Report submitted successfully!');
+        if (reportResponse.ok) 
+
+        {alert(data.message || 'Report submitted successfully!');
         } else {
             alert(data.message || 'Something went wrong. Please try again.');
-        }
-    } catch (error) {
+        } 
+    }
+        catch (error) {
         console.error('Network or Server Error:', error);
         alert('Unable to connect to the server right now. Please check your connection.');
     }
