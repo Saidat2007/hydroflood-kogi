@@ -1,7 +1,7 @@
 const express = require('express');
 const Report = require('../models/Report');
 const protect = require('../middleware/auth');
-const upload = require('../cloudinary'); // adjust the path (e.g. './cloudinary') if your file is in the same folder
+const upload = require('./cloudinary');
 
 const router = express.Router();
 
