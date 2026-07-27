@@ -2,6 +2,7 @@ const express = require('express');
 const Report = require('../models/Report');
 const protect = require('../middleware/auth');
 const multer = require('multer');
+const upload = require('../cloudinary'); // adjust the path (e.g. './cloudinary') if your file is in the same folder
 
 const router = express.Router();
 
@@ -24,7 +25,7 @@ router.post('/', upload.single('image'), async (req, res) => {
             issueType: req.body.issueType,
             description: req.body.description,
             location: req.body.location,
-            image: req.file ? req.file.filename : "",
+            image: req.file ? req.file.path : "",
             userId: req.user ? req.user._id : "000000000000000000000000"
         });
 
