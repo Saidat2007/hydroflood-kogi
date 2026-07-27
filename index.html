@@ -94,39 +94,28 @@
 
         <script>
             document.getElementById('reportForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    
-    // Get the dropdown value and check if it's 'Other'
-        const locationSelect = document.getElementById('location').value;
-        let finalLocation = locationSelect;
+  e.preventDefault();
 
-        if (locationSelect === 'Other') {
-            finalLocation = document.getElementById('customLocation').value;
-        }
-    
-    try {
-        const reportResponse = await fetch('https://hydroflood-kogi-1.onrender.com/api/reports', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-    location: finalLocation, 
-    issueType: document.getElementById('issueType').value, 
-    description: document.getElementById('description').value 
-})
-        });
-        const data = await reportResponse.json();
-        
-        if (reportResponse.ok) 
+  const formData = new FormData(document.getElementById('reportForm'));
 
-        {alert(data.message || 'Report submitted successfully!');
-        } else {
-            alert(data.message || 'Something went wrong. Please try again.');
-        } 
+  try {
+    const reportResponse = await fetch('https://hydroflood-kogi-1.onrender.com/api/reports', {
+      method: 'POST',
+      body: formData 
+    });
+
+    const data = await reportResponse.json();
+
+    if (reportResponse.ok) {
+      alert(data.message || 'Report submitted successfully!');
+      document.getElementById('reportForm').reset();
+    } else {
+      alert('Error: ' + (data.error || 'Failed to submit report'));
     }
-        catch (error) {
-        console.error('Network or Server Error:', error);
-        alert('Unable to connect to the server right now. Please check your connection.');
-    }
+  } catch (err) {
+    console.error('Submission error:', err);
+    alert('Something went wrong!');
+  }
 });
         function checkCustomLocation(selectObj) {
             const customDiv = document.getElementById('customLocationDiv');
