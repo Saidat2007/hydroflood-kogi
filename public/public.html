@@ -82,11 +82,14 @@ function toggleCustomLocation(select) {
     }
 }
 
-// Update your button click listener
-document.getElementById('sendAlertBtn').addEventListener('click', async () => {
-    let location = document.getElementById('alertLocation').value;
-    const customLocation = document.getElementById('customLocationInput').value;
-    
+    // Safely add event listener if the button exists on this page
+    const sendAlertBtn = document.getElementById('sendAlertBtn');
+    if (sendAlertBtn) {
+        sendAlertBtn.addEventListener('click', async () => {
+            let location = document.getElementById('alertLocation').value;
+            const customLocation = document.getElementById('customLocationInput').value;
+        
+            
     // If 'Other' is selected, use what was typed in the custom text box
     if (location === 'Other') {
         if (!customLocation.trim()) {
@@ -107,6 +110,7 @@ document.getElementById('sendAlertBtn').addEventListener('click', async () => {
     const data = await response.json();
     alert(data.message);
 });
+}
     </script>
 </body>
 </html>
