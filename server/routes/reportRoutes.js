@@ -1,21 +1,9 @@
 const express = require('express');
 const Report = require('../models/Report');
 const protect = require('../middleware/auth');
-const multer = require('multer');
 const upload = require('../cloudinary'); // adjust the path (e.g. './cloudinary') if your file is in the same folder
 
 const router = express.Router();
-
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, 'uploads/');
-    },
-    filename: (req, file, cb) => {
-        cb(null, Date.now() + '-' + file.originalname);
-    }
-});
-
-const upload = multer({ storage });
 
 router.post('/', upload.single('image'), async (req, res) => {
     try {
