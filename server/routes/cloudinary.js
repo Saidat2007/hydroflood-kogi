@@ -11,10 +11,11 @@ cloudinary.config({
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
-    folder: 'hydroflood-reports',
-    allowed_formats: ['jpg', 'png', 'jpeg']
+    folder: 'hydroflood-reports', // This creates the folder in Cloudinary
+    allowed_formats: ['jpg', 'jpeg', 'png']
   }
 });
 
 const upload = multer({ storage: storage });
+
 module.exports = upload;
