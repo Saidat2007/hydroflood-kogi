@@ -88,7 +88,7 @@ async function fetchReports() {
         const response = await fetch(`${API_URL}/api/reports`);
         if (!response.ok) throw new Error('Failed to fetch');
         const reports = await response.json();
-        console.log("Full Report Data:, reports);")
+        console.log("Full Report Data:", reports);
 
         // 1. Update the count here, using the correct variable
         const countElement = document.getElementById('reportCount');
@@ -114,7 +114,7 @@ async function fetchReports() {
                     <option value="Investigating" ${report.status === 'Investigating' ? 'selected' : ''}>Investigating</option>
                     <option value="Resolved" ${report.status === 'Resolved' ? 'selected' : ''}>Resolved</option>
                 </select>
-                <img src="${API_URL}/${report.image}" class="mt-4 w-full h-48 object-cover">
+                <img src="${API_URL}/uploads/${report.image}" class="mt-4 w-full h-48 object-cover">
             `;
             reportsGrid.appendChild(card);
         });
