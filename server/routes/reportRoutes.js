@@ -1,30 +1,29 @@
 const express = require('express');
 const Report = require('../models/Report');
 const protect = require('../middleware/auth');
-const upload = require('./cloudinary');
-
 const router = express.Router();
+const upload = require('./cloudinary'); // Make sure this path is correct
 
 router.post('/', upload.single('image'), async (req, res) => {
-    try {
-        // Create the report using the data from the form
-        const newReport = new Report({
-            title: req.body.title,
-            issueType: req.body.issueType,
-            description: req.body.description,
-            location: req.body.location,
-            image: req.file ? req.file.path : "",
-            userId: req.user ? req.user._id : "000000000000000000000000"
-        });
+  try {
+    // Check what req.file contains
+    console.log("Uploaded file info:", req.file);
 
-        await newReport.save();
-        
-        // Return clean JSON - This is what the dashboard expects!
-        res.status(201).json({ success: true, message: 'Report submitted successfully!' });
-    } catch (err) {
-        // If there's an error, return JSON instead of crashing
-        res.status(400).json({ success: false, message: err.message });
-    }
+    const newReport = new Report({
+      title: req.body.title,
+      issueType: req.body.issueType,
+      description: req.body.description,
+      location: req.body.location,
+      image: req.file ? req.file.path : "", // This saves the Cloudinary URL
+      userId: req.user ? req.user._id : "000000000000000000000000"
+    });
+
+    await newReport.save();
+    res.status(201).json({ message: "Report submitted successfully" });
+  } catch (err) {
+    console.error("Upload error:", err);
+    res.status(500).json({ error: err.message });
+  }
 });
 
 router.get('/', async (req, res) => {
