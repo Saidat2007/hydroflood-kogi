@@ -25,6 +25,7 @@ app.use('/api/auth', authRoutes)
 app.use('/api/reports', reportRoutes);
 app.use('/api/subscribers', subscriberRoutes);
 app.use('/api/alerts', require('./routes/alertRoutes'));
+app.use(express.static(path.join(__dirname, '../')));
 // Add this to server.js
 app.use('/uploads', express.static('/uploads'));
 
