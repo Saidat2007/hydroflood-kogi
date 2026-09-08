@@ -1,0 +1,30 @@
+### LogPOST http://localhost:5000/api/auth/login
+POST http://localhost:5000/api/auth/login
+Content-Type: application/json
+
+{
+    "email":"testuser@gmail.com", 
+    "password":"mypassword123"
+}
+### Create a new flood Report (Secured)
+POST http://localhost:5000/api/reports/
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhMjE4OTg4ZjhjYjlhYmRmZWMwZmM1YiIsImlhdCI6MTc4MTc5NzA4MywiZXhwIjoxNzgxODAwNjgzfQ.8UXGGjiISC2QOZgDO-ejI78Lq4LtyJZIs55c5LWNPzQ
+
+
+{
+    "issueType": "blocked drainage",
+    "description": "The main drainage layout along the road is completelyclogged with plastic waste causing heavy overflows.",
+    "location": "Lokoja, Kogi State"
+}
+
+### Create a new flood Report (Secured)
+POST http://localhost:5000/api/reports
+Content-Type: application/json
+Authorization: Bearer [{token}]
+
+{
+    "issueType": "flooding",
+    "description": "The water level has broken past the sandbags near the residential layouts.",
+    "location": "Ganaja, Lokoja"
+}

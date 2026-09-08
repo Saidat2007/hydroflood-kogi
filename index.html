@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report a Flood/Drainage Issue - Hydroflood Kogi</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-blue-100 min-h-screen flex items-center justify-center p-4">
+    <div class="w-full max-w-md bg-white rounded-lg shadow-lg p-8">
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-bold text-blue-600 mb-2">Hydroflood Kogi</h1>
+            <p class="text-gray-600">Report a Flood/Drainage Issue</p>
+        </div>
+
+            <form id="reportForm" class="space-y-6" enctype="multipart/form-data">
+                <!-- Location Field -->
+                <div>
+                <label for="location" class="block text-sm font-medium text-gray-700 mb-2">
+                    Location
+                </label>
+                <div class="mb-4">
+            <label for="location" class="block text-sm font-medium text-gray-700">Location:</label>
+            <select id="location" name="location" onchange="checkCustomLocation(this)" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border" required>
+                <option value="">--Select your location--</option>
+                <option value="Lokoja">Lokoja</option>
+                <option value="Ganaja">Ganaja</option>
+                <option value="Adankolo">Adankolo</option>
+                <option value="Kabba">Kabba</option>
+                <option value="Anyigba">Anyigba</option>
+                <option value="Okene">Okene</option>
+                <option value="Idah">Idah</option>
+                <option value="Ankpa">Ankpa</option>
+                <option value="Other">Other</option>
+            </select>
+        </div>
+
+        <!-- Custom Location Input (Hidden by default) -->
+        <div id="customLocationDiv" class="mb-4 hidden">
+            <label for="customLocation" class="block text-sm font-medium text-gray-700">Enter Custom Location:</label>
+            <input type="text" id="customLocation" name="customLocation" placeholder="Type your location here" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border">
+        </div>
+
+
+
+                        <div>
+                <label for="issueType" class="block text-sm font-medium text-gray-700 mb-2">
+                    Issue Type
+                </label>
+                <input type="text" id="issueType" name="issueType" placeholder="Enter issue type" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                </div>
+
+                <!-- Description Field -->
+                <div>
+                <label for="description" class="block text-sm font-medium text-gray-700 mb-2">
+                    Description
+                </label>
+                <textarea
+                    id="description"
+                    name="description"
+                    placeholder="Provide detailed description of the issue"
+                    rows="4"
+                    required
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition resize-none"
+                ></textarea>
+                </div>
+
+                <!-- Image Upload Field -->
+                <div>
+                <label for="image" class="block text-sm font-medium text-gray-700 mb-2">
+                    Upload Image
+                </label>
+                <input
+                    type="file"
+                    id="image"
+                    name="image"
+                    accept="image/*"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+                />
+                </div>
+
+                <!-- Submit Button -->
+                <button
+                type="submit"
+                class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-200 ease-in-out transform hover:scale-105"
+                >
+                Submit Report
+                </button>
+            </form>
+
+        <!-- Status Message -->
+        <div id="statusMessage" class="mt-4 hidden p-4 rounded-lg text-center text-sm font-medium"></div>
+    </div>
+
+        <script>
+            document.getElementById('reportForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const formData = new FormData(document.getElementById('reportForm'));
+
+  try {
+    const reportResponse = await fetch('https://hydroflood-kogi-1.onrender.com/api/reports', {
+      method: 'POST',
+      body: formData 
+    });
+
+    const data = await reportResponse.json();
+
+    if (reportResponse.ok) {
+      alert(data.message || 'Report submitted successfully!');
+      document.getElementById('reportForm').reset();
+    } else {
+      alert('Error: ' + (data.error || 'Failed to submit report'));
+    }
+  } catch (err) {
+    console.error('Submission error:', err);
+    alert('Something went wrong!');
+  }
+});
+        function checkCustomLocation(selectObj) {
+            const customDiv = document.getElementById('customLocationDiv');
+            const customInput = document.getElementById('customLocation');
+            
+            if (selectObj.value === 'Other') {
+                customDiv.classList.remove('hidden');
+                customInput.setAttribute('required', 'true');
+            } else {
+                customDiv.classList.add('hidden');
+                customInput.removeAttribute('required');
+                customInput.value = '';
+            }
+        }
+        </script>
+</body>
+</html>
