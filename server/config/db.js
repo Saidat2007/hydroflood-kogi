@@ -8,7 +8,11 @@ const connectDB = async () => {
     if (!mongoUri) {
       throw new Error('MONGO_URI is not defined in environment variables');
     }
+<<<<<<< HEAD
     console.log("Attwmpting to connect with URI:", mongoUri);
+=======
+
+>>>>>>> 49153e9db2043274749b3d27014f75ac1a5d9698
     await mongoose.connect(mongoUri);
 
     console.log('MongoDB connected successfully');
