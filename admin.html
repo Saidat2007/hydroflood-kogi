@@ -57,11 +57,11 @@
     </div>
 
     <script>
-    const API_URL = window.location.hostname === 'localhost' 
-        ? 'http://localhost:5000' 
+    const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+        ? 'http://localhost:5000'
         : 'https://hydroflood-kogi-1.onrender.com';
-
         // Auth Guard: Kick out users if no login token exists
+        
 if (!localStorage.getItem('token')) {
     window.location.href = 'login.html';
 }

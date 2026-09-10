@@ -99,7 +99,7 @@
         function initMap() {
             map = L.map('map').setView([7.8024, 6.7333], 8);
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                maxZoom: 19,
+               maxZoom: 19,
                 attribution: '&copy; OpenStreetMap contributors'
             }).addTo(map);
             markersLayer = L.layerGroup().addTo(map);
@@ -112,7 +112,7 @@
             const errorDiv = document.getElementById('error');
 
             try {
-                const response = await fetch('https://hydroflood-kogi-1.onrender.com/api/reports/');
+                const response = await fetch('http://localhost:5000/api/reports/');
                 if (!response.ok) throw new Error('Failed to fetch reports');
 
                 const data = await response.json();
