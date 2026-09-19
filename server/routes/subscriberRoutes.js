@@ -8,9 +8,10 @@ router.post('/subscribe', async (req, res) => {
         const newSubscriber = new Subscriber(req.body);
         await newSubscriber.save();
         res.status(201).json({ message: 'Subscription successful!' });
-    } catch (err) {
-        res.status(400).json({ error: 'Failed to subscribe.' });
-    }
+   } catch (err) {
+    console.error("Subscription validation error:", err.message);
+    res.status(400).json({ error: err.message });
+}
 });
 
 // Route to view all subscribers
