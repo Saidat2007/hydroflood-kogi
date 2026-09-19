@@ -27,8 +27,8 @@ router.post('/send-alert', async (req, res) => {
         console.log("Received alert request for location:", req.body.location, "with message:", req.body.message);
 
         const { location, message } = req.body;
-        const MY_API_KEY = 'b266b947be2577a246363da935c210deb78fe69db72a38828dfb24524d4';
-        console.log("FORCED API KEY LENGTH:", 'b266b947be2577a246363da935c210deb78fe69db72a38828dfb24524d4'.length);
+        const MY_API_KEY = '45c5ab0c8ed3c5fc385afac8077cfcc6ef259966e90e559303a3d655a3ebb5eb';
+        console.log("FORCED API KEY LENGTH:", '45c5ab0c8ed3c5fc385afac8077cfcc6ef259966e90e559303a3d655a3ebb5eb'.length);
         
         let query = {};
         if (location && location !== 'All') {
@@ -58,7 +58,7 @@ router.post('/send-alert', async (req, res) => {
             SMS: {
                 auth: {
                     username: 'saidatbilqis@gmail.com',
-                    apikey: 'b266b947be2577a246363da935c210deb78fe69db72a38828dfb24524d4'
+                    apikey: '45c5ab0c8ed3c5fc385afac8077cfcc6ef259966e90e559303a3d655a3ebb5eb'
                 },
                 message: {
                     sender: 'HydroFlood',
