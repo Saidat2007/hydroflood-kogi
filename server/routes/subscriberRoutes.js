@@ -5,15 +5,21 @@ const Subscriber = require('../models/Subscriber');
 // Route to add a new subscriber
 router.post('/subscribe', async (req, res) => {
     try {
-        const newSubscriber = new Subscriber(req.body);
-        await newSubscriber.save();
-        res.status(201).json({ message: 'Subscription successful!' });
-   } catch (err) {
-    console.error("Subscription validation error:", err.message);
-    res.status(400).json({ error: err.message });
-}
-});
+        const { name, phoneNumber, phone, location } = req.body;
+        
+        const newSubscriber = new Subscriber({
+            name: name,
+            phone: phoneNumber || phone, // Handles the field name mismatch
+            location: location
+        });
 
+        await newSubscriber.save();
+        res.status(201).json({ message: "Subscription successful!" });
+    } catch (err) {
+        console.error("Subscription error:", err.message);
+        res.status(400).json({ error: err.message });
+    }
+});
 // Route to view all subscribers
 router.get('/', async (req, res) => {
     try {
