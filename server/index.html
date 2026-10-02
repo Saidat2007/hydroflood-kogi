@@ -40,13 +40,21 @@
                     required
                     class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
                 >
-                  <option value="" disabled selected>Select an issue type</option>
-                  <option value="Flash Flood">Flash Flood</option>
-                  <option value="River Overflow">River Overflow</option>
-                  <option value="Blocked Drainage">Blocked Drainage</option>
-                  <option value="Heavy Rainfall">Heavy Rainfall</option>
+                    <option value="">Select an issue type</option>
+                    <option value="Flash Flood">Flash Flood</option>
+                    <option value="River Overflow">River Overflow</option>
+                    <option value="Blocked Drainage">Blocked Drainage</option>
+                    <option value="Heavy Rainfall">Heavy Rainfall</option>
+                    <option value="Gully Erosion">Gully Erosion</option>
+                    <option value="Other">Other</option>
                 </select>
                 </div>
+
+                <div id="customIssueContainer" class="mt-3 hidden">
+                <label for="customIssueType" class="block text-sm font-medium text-gray-700 mb-1">Please specify issue type</label>
+                <input type="text" id="customIssueType" name="customIssueType" placeholder="e.g., Oil Spill, Windstorm" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                </div>
+
 
                 <!-- Description Field -->
                 <div>
@@ -91,6 +99,20 @@
     </div>
 
 <script>
+    document.getElementById('issueType').addEventListener('change', function() {
+    const customContainer = document.getElementById('customIssueContainer');
+    const customInput = document.getElementById('customIssueType');
+    
+    if (this.value === 'Other') {
+        customContainer.classList.remove('hidden');
+        customInput.setAttribute('required', 'required');
+    } else {
+        customContainer.classList.add('hidden');
+        customInput.removeAttribute('required');
+        customInput.value = ''; 
+    }
+});
+
     async function sendReportFormData(e) {
         // 1. Instantly lock the browser down so it cannot abort the connection!
         e.preventDefault(); 
